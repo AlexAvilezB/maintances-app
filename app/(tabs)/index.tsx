@@ -1,74 +1,57 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { UseEquipments } from '../custom-hooks/api/equipments/use-equipments';
+import { useTitleCase } from '../custom-hooks/misc/use-title-case';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
+
+  const { UseEquipmentsQuery } = UseEquipments();
+
+  const handleRedirectToCreateEquipment = () => {
+      router.push("/(screens)/register-equipment");
+    };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView className="bg-white flex-1 py-2 px-6">
+      <View className="flex-row justify-between items-center">
+        <Text className="text-2xl font-bold">Equipos</Text>
+        <TouchableOpacity 
+          onPress={handleRedirectToCreateEquipment}
+          className="bg-blue-500 px-4 py-2 rounded-lg">
+          <Text className="text-white font-bold">Nuevo</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList className='mt-6'
+      data={ UseEquipmentsQuery.data } 
+      renderItem={
+        ({ item }) => (
+          <View className="border-b border-gray-300 py-2 flex-row gap-4 items-center">
+            <Text className="flex-1 text-center text-sm">{useTitleCase(`${item.nombre}`)}</Text>
+            <Text className="flex-1 text-center text-sm">{item.modelo}</Text>
+            <Text className="flex-1 text-center font-bold text-sm">{item.numeroSerie}</Text>
+            <Text className="flex-1 text-center font-bold text-sm">{item.estadoId}</Text>
+          </View>
+        )
+      }
+      ListHeaderComponent={
+        <View className="border-b border-gray-300 py-2 flex-row gap-4">
+          <Text className="flex-1 text-center font-bold">Nombre</Text>
+          <Text className="flex-1 text-center font-bold">Modelo</Text>
+          <Text className="flex-1 text-center font-bold">Serie</Text>
+          <Text className="flex-1 text-center font-bold">ID de Estado</Text>
+        </View>
+      } 
+      ListEmptyComponent={
+        <Text className="text-center mt-4">
+          {
+            UseEquipmentsQuery.isPending ? 'Cargando...' : 'No hay equipos registrados'
+          }
+        </Text>
+      }
+    />
+
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

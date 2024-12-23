@@ -16,6 +16,9 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
+        tabBarIconStyle: {
+          marginVertical: 5,
+        },
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -29,15 +32,29 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Equipos',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="cpu.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="workers"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Trabajadores',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="maintenances"
+        options={{
+          title: 'Mantenimientos',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="sdcard.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="fixes"
+        options={{
+          title: 'Reparaciones',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="hammer.fill" color={color} />,
         }}
       />
     </Tabs>
